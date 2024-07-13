@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
 import time
+from datetime import timedelta
 
-CUR_PATH = os.path.dirname(os.path.realpath(__file__))  
-LOG_PATH = os.path.join(os.path.dirname(CUR_PATH), 'logs') # LOG_PATH是存放日志的路径
+CUR_PATH = os.path.dirname(os.path.realpath(__file__))
+LOG_PATH = os.path.join(os.path.dirname(CUR_PATH), 'logs')  # LOG_PATH是存放日志的路径
 if not os.path.exists(LOG_PATH): os.mkdir(LOG_PATH)  # 如果不存在这个logs文件夹，就自动创建一个
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +30,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'wxcloudrun'
+    'rest_framework',
+    'recipe_api',
+    'recipes',
+    'shopping_management',
+    'fridge_management',
+    'custom_users',
+    'rest_framework_jwt',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +49,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'wxcloudrun.urls'
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,  # 每页显示的条目数，可以根据需要调整
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+}
+
+ROOT_URLCONF = 'recipe_api.urls'
+
+AUTH_USER_MODEL = 'custom_users.CustomUser'
 
 TEMPLATES = [
     {
@@ -60,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wxcloudrun.wsgi.application'
+WSGI_APPLICATION = 'recipe_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -68,7 +94,7 @@ WSGI_APPLICATION = 'wxcloudrun.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get("MYSQL_DATABASE", 'django_demo'),
+        'NAME': os.environ.get("MYSQL_DATABASE", 'recipes'),
         'USER': os.environ.get("MYSQL_USERNAME"),
         'HOST': os.environ.get("MYSQL_ADDRESS").split(':')[0],
         'PORT': os.environ.get("MYSQL_ADDRESS").split(':')[1],
@@ -190,3 +216,5 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGS_DIR = '/data/logs/'
+
+APPEND_SLASH = False

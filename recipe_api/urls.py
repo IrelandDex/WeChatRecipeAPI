@@ -1,4 +1,4 @@
-"""wxcloudrun URL Configuration
+"""recipe_api URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -14,13 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from wxcloudrun import views
-from django.conf.urls import url
+from django.contrib import admin
+from django.urls import path, include
 
-urlpatterns = (
-    # 计数器接口
-    url(r'^^api/count(/)?$', views.counter),
-
-    # 获取主页
-    url(r'(/)?$', views.index),
-)
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/fridge/', include('fridge_management.urls')),
+    path('api/shopping/', include('shopping_management.urls')),
+    path('api/users/', include('custom_users.urls')),
+    path('api/recipes/', include('recipes.urls')),
+    path('api/common/', include('common.urls')),
+]

@@ -4,6 +4,7 @@ Thumbs.db
 
 # 忽略日志文件
 *.log
+/logs
 
 # 忽略临时文件
 *.tmp
@@ -24,3 +25,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
+
+/local_scripts
