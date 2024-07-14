@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from django.db.models import Q, Count
 from .models import Recipe, Ingredient, RecipeIngredient, CookStep, UserFavorite
-from .serializers import RecipeSerializer, IngredientSerializer, UserFavoriteSerializer
+from .serializers import RecipeSerializer, IngredientSerializer, UserFavoriteSerializer, RecipeListSerializer
 from rest_framework.views import APIView
 
 
@@ -25,6 +25,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = StandardResultsSetPagination  # 使用自定义的分页类
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RecipeListSerializer
+        return RecipeSerializer
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
@@ -68,7 +73,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = [AllowAny]
+    pagination_class = StandardResultsSetPagination  # 使用自定义的分页类
+
+    # permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         title = serializer.validated_data['title']

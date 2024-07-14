@@ -217,4 +217,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGS_DIR = '/data/logs/'
 
-APPEND_SLASH = False
+APPEND_SLASH = True

@@ -60,6 +60,13 @@ class RecipeSerializer(serializers.ModelSerializer):
 
         return recipe
 
+class RecipeListSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.username')
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'title', 'author', 'cover_img']
+
 class UserFavoriteSerializer(serializers.ModelSerializer):
     recipe = RecipeSerializer(read_only=True)
 
